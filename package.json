@@ -1,0 +1,19 @@
+{
+  "name": "com.codecatgames.hmspersistentdata",
+  "version": "1.0.0",
+  "displayName": "HMPersistentData",
+  "description": "",
+  "author": {
+    "name": "Emre Emiroglu",
+    "email": "emirogluemre08@gmail.com",
+    "url": "https://github.com/Emre-Emiroglu"
+  },
+  "keywords": [
+    "",
+    "unity"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Emre-Emiroglu/HMPersistentData.git"
+  }
+}

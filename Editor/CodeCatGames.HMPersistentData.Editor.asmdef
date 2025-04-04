@@ -1,0 +1,18 @@
+{
+    "name": "CodeCatGames.HMPersistentData.Editor",
+    "rootNamespace": "CodeCatGames.HMPersistentData.Editor",
+    "references": [
+        "GUID:381f5202d0f9be944ae4e0f528bb011f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
