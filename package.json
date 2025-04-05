@@ -2,7 +2,6 @@
   "name": "com.codecatgames.hmspersistentdata",
   "version": "1.0.0",
   "displayName": "HMPersistentData",
-  "description": "",
   "author": {
     "name": "Emre Emiroglu",
     "email": "emirogluemre08@gmail.com",
@@ -15,5 +14,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Emre-Emiroglu/HMPersistentData.git"
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
   }
 }
