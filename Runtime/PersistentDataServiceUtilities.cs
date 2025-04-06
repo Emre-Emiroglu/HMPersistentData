@@ -7,10 +7,12 @@ namespace CodeCatGames.HMPersistentData.Runtime
     {
         #region Fields
         private static IPersistentDataService _persistentDataService;
+        private static bool _isInitialized;
         #endregion
 
         #region Core
-        public static void Initialize(SerializerType serializerType, string fileExtension, string key, string iv) =>
+        public static void Initialize(SerializerType serializerType, string fileExtension, string key, string iv)
+        {
             _persistentDataService = serializerType switch
             {
                 SerializerType.Json => new PersistentDataService(new JsonSerializer(), fileExtension),
@@ -18,14 +20,45 @@ namespace CodeCatGames.HMPersistentData.Runtime
                     fileExtension),
                 _ => new PersistentDataService(new JsonSerializer(), fileExtension)
             };
+
+            _isInitialized = true;
+        }
+        private static void EnsureInitialized()
+        {
+            if (_isInitialized)
+                return;
+
+            _persistentDataService = new PersistentDataService(new JsonSerializer(), "dat");
+            
+            _isInitialized = true;
+        }
         #endregion
 
         #region Executes
-        public static void Save<T>(string name, T data, bool overwrite = true) =>
+        public static void Save<T>(string name, T data, bool overwrite = true)
+        {
+            EnsureInitialized();
+            
             _persistentDataService.Save(name, data, overwrite);
-        public static T Load<T>(string name) => _persistentDataService.Load<T>(name);
-        public static void Delete(string name) => _persistentDataService.Delete(name);
-        public static void DeleteAll() => _persistentDataService.DeleteAll();
+        }
+        public static T Load<T>(string name)
+        {
+            EnsureInitialized();
+            
+            return _persistentDataService.Load<T>(name);
+        }
+        public static void Delete(string name)
+        {
+            EnsureInitialized();
+            
+            _persistentDataService.Delete(name);
+        }
+        public static void DeleteAll()
+        {
+            EnsureInitialized();
+            
+            _persistentDataService.DeleteAll();
+        }
         public static void LogPersistentDataServiceInitialized() => Debug.Log("Persistent Data Service initialized");
         public static void LogPersistentDataServiceFileSaved(string filePath) => Debug.Log($"File '{filePath}' saved");
         public static void LogPersistentDataServiceFileLoaded(string filePath) =>

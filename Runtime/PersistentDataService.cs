@@ -16,7 +16,7 @@ namespace CodeCatGames.HMPersistentData.Runtime
         #endregion
 
         #region Constructor
-        public PersistentDataService(ISerializer serializer, string fileExtension = "dat")
+        public PersistentDataService(ISerializer serializer, string fileExtension)
         {
             _serializer = serializer;
             _dataPath = Application.persistentDataPath;
