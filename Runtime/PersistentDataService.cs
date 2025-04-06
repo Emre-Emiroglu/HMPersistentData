@@ -21,6 +21,8 @@ namespace CodeCatGames.HMPersistentData.Runtime
             _serializer = serializer;
             _dataPath = Application.persistentDataPath;
             _fileExtension = fileExtension;
+            
+            PersistentDataServiceUtilities.LogPersistentDataServiceInitialized();
         }
         #endregion
 
@@ -30,36 +32,46 @@ namespace CodeCatGames.HMPersistentData.Runtime
             string filePath = GetPathToFile(name);
             
             if (!overwrite && File.Exists(filePath))
-                throw new IOException($"File '{filePath}' already exists and overwrite is false.");
+                PersistentDataServiceUtilities.ThrowSaveIOException(filePath);
 
             string serialized = _serializer.Serialize(data);
             
             File.WriteAllText(filePath, serialized);
+            
+            PersistentDataServiceUtilities.LogPersistentDataServiceFileSaved(filePath);
         }
         public T Load<T>(string name)
         {
             string filePath = GetPathToFile(name);
             
             if (!File.Exists(filePath))
-                throw new FileNotFoundException($"File '{filePath}' not found.");
+                PersistentDataServiceUtilities.ThrowFileNotFoundException(filePath);
 
             string content = File.ReadAllText(filePath);
             
-            return _serializer.Deserialize<T>(content);
+            T deserialized = _serializer.Deserialize<T>(content);
+            
+            PersistentDataServiceUtilities.LogPersistentDataServiceFileLoaded(filePath);
+
+            return deserialized;
         }
         public void Delete(string name)
         {
             string filePath = GetPathToFile(name);
+
+            if (!File.Exists(filePath))
+                PersistentDataServiceUtilities.ThrowFileNotFoundException(filePath);
             
-            if (File.Exists(filePath))
-                File.Delete(filePath);
+            File.Delete(filePath);
+            
+            PersistentDataServiceUtilities.LogPersistentDataServiceFileDeleted(filePath);
         }
         public void DeleteAll()
         {
             string[] files = Directory.GetFiles(_dataPath, $"*.{_fileExtension}");
-            
+
             foreach (string file in files)
-                File.Delete(file);
+                Delete(file);
         }
         #endregion
     }
