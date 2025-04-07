@@ -71,7 +71,10 @@ namespace CodeCatGames.HMPersistentData.Runtime
             string[] files = Directory.GetFiles(_dataPath, $"*.{_fileExtension}");
 
             foreach (string file in files)
-                Delete(file);
+            {
+                string fileName = Path.GetFileNameWithoutExtension(file);
+                Delete(fileName);
+            }
         }
         #endregion
     }
