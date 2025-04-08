@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 
 namespace CodeCatGames.HMPersistentData.Runtime
 {
+    /// <summary>
+    /// Provides encrypted JSON serialization and deserialization using AES encryption.
+    /// </summary>
     public sealed class EncryptedJsonSerializer : ISerializer
     {
         #region ReadonlyFields
@@ -13,6 +16,11 @@ namespace CodeCatGames.HMPersistentData.Runtime
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Initializes the EncryptedJsonSerializer with an AES key and IV.
+        /// </summary>
+        /// <param name="base64Key">The AES encryption key (Base64 encoded).</param>
+        /// <param name="base64Iv">The AES initialization vector (Base64 encoded).</param>
         public EncryptedJsonSerializer(string base64Key, string base64Iv)
         {
             _key = Convert.FromBase64String(base64Key);
@@ -21,7 +29,18 @@ namespace CodeCatGames.HMPersistentData.Runtime
         #endregion
         
         #region Executes
+        /// <summary>
+        /// Serializes the provided object to an encrypted JSON string.
+        /// </summary>
+        /// <param name="obj">The object to serialize.</param>
+        /// <returns>The encrypted JSON string representing the object.</returns>
         public string Serialize<T>(T obj) => Encrypt(JsonConvert.SerializeObject(obj));
+        
+        /// <summary>
+        /// Deserializes an encrypted JSON string to the specified object type.
+        /// </summary>
+        /// <param name="encryptedJson">The encrypted JSON string to deserialize.</param>
+        /// <returns>The deserialized object of type <typeparamref name="T"/>.</returns>
         public T Deserialize<T>(string encryptedJson) => JsonConvert.DeserializeObject<T>(Decrypt(encryptedJson));
         private string Encrypt(string plainText)
         {
