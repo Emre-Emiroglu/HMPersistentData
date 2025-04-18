@@ -102,6 +102,7 @@ namespace CodeCatGames.HMPersistentData.Runtime
             foreach (string file in files)
             {
                 string fileName = Path.GetFileNameWithoutExtension(file);
+                
                 Delete(fileName);
             }
         }

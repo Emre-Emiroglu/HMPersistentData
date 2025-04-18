@@ -10,19 +10,39 @@ namespace CodeCatGames.HMPersistentData.Runtime
     {
         #region Fields
         private static IPersistentDataService _persistentDataService;
-        private static bool _isInitialized;
         #endregion
 
         #region Core
         /// <summary>
+        /// Initializes the persistent data service using the <c>PersistentDataConfig</c> ScriptableObject 
+        /// located in the <c>Resources/HMPersistentData/PersistentDataConfig.asset</c> path.
+        /// </summary>
+        /// <para>
+        /// If the config is not found, initialization is aborted and an error is logged.
+        /// </para>
+        public static void Initialize()
+        {
+            PersistentDataConfig config =
+                Resources.Load<PersistentDataConfig>(nameof(HMPersistentData) + "/PersistentDataConfig");
+            
+            if (config == null)
+            {
+                LogConfigIsNullError();
+                
+                return;
+            }
+
+            Initialize(config.SerializerType, config.FileExtension, config.Key, config.Iv);
+        }
+
+        /// <summary>
         /// Initializes the persistent data service with a specified serializer, file extension, key, and IV.
         /// </summary>
-        /// <param name="serializerType">The type of serializer to use (e.g., Json or EncryptedJson).</param>
+        /// <param name="serializerType">The type of serializer to use (e.g., JSON or EncryptedJson).</param>
         /// <param name="fileExtension">The file extension for saved files.</param>
         /// <param name="key">The AES encryption key (Base64 encoded) for encrypted JSON serializer.</param>
         /// <param name="iv">The AES initialization vector (Base64 encoded) for encrypted JSON serializer.</param>
-        public static void Initialize(SerializerType serializerType, string fileExtension, string key, string iv)
-        {
+        public static void Initialize(SerializerType serializerType, string fileExtension, string key, string iv) =>
             _persistentDataService = serializerType switch
             {
                 SerializerType.Json => new PersistentDataService(new JsonSerializer(), fileExtension),
@@ -30,18 +50,6 @@ namespace CodeCatGames.HMPersistentData.Runtime
                     fileExtension),
                 _ => new PersistentDataService(new JsonSerializer(), fileExtension)
             };
-
-            _isInitialized = true;
-        }
-        private static void EnsureInitialized()
-        {
-            if (_isInitialized)
-                return;
-
-            _persistentDataService = new PersistentDataService(new JsonSerializer(), "dat");
-            
-            _isInitialized = true;
-        }
         #endregion
 
         #region Executes
@@ -51,45 +59,26 @@ namespace CodeCatGames.HMPersistentData.Runtime
         /// <param name="name">The name of the file to save the data to.</param>
         /// <param name="data">The data to save.</param>
         /// <param name="overwrite">Whether to overwrite the file if it already exists. Defaults to true.</param>
-        public static void Save<T>(string name, T data, bool overwrite = true)
-        {
-            EnsureInitialized();
-            
+        public static void Save<T>(string name, T data, bool overwrite = true) =>
             _persistentDataService.Save(name, data, overwrite);
-        }
-        
+
         /// <summary>
         /// Loads the data from a file with the specified name.
         /// </summary>
         /// <param name="name">The name of the file to load data from.</param>
         /// <returns>The deserialized data of type <typeparamref name="T"/>.</returns>
-        public static T Load<T>(string name)
-        {
-            EnsureInitialized();
-            
-            return _persistentDataService.Load<T>(name);
-        }
-        
+        public static T Load<T>(string name) => _persistentDataService.Load<T>(name);
+
         /// <summary>
         /// Deletes the file with the specified name.
         /// </summary>
         /// <param name="name">The name of the file to delete.</param>
-        public static void Delete(string name)
-        {
-            EnsureInitialized();
-            
-            _persistentDataService.Delete(name);
-        }
-        
+        public static void Delete(string name) => _persistentDataService.Delete(name);
+
         /// <summary>
         /// Deletes all files saved by the persistent data service.
         /// </summary>
-        public static void DeleteAll()
-        {
-            EnsureInitialized();
-            
-            _persistentDataService.DeleteAll();
-        }
+        public static void DeleteAll() => _persistentDataService.DeleteAll();
         
         /// <summary>
         /// Logs a message indicating that the persistent data service has been initialized.
@@ -131,6 +120,8 @@ namespace CodeCatGames.HMPersistentData.Runtime
         /// <exception cref="FileNotFoundException">Thrown when the specified file is not found.</exception>
         public static void ThrowFileNotFoundException(string filePath) =>
             throw new FileNotFoundException($"File '{filePath}' not found.");
+        private static void LogConfigIsNullError() =>
+            Debug.LogError("[HMPersistentData] Config is null. Initialization aborted.");
         #endregion
     }
 }

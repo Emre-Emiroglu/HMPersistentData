@@ -6,8 +6,14 @@ HMPersistentData offers a modular and secure data persistence solution:
 * Save / Load / Delete / DeleteAll: Save and retrieve any serializable object type, or delete them individually or all at once.
 * Serializer Selection: Choose between default JSON and AES-encrypted JSON serializers.
 * Custom Key & IV Support: For encrypted serialization, specify your own key and IV values to secure data.
-* Editor Utility Tools: Easily manage saved data through an intuitive Editor window. Includes opening save file location, clearing all saved data, and changing the serializer settings at runtime.
-* Static Utility Access: Use PersistentDataUtilities to perform all operations statically without manual instantiation.
+* Editor Utility Tools: Easily manage saved data through an intuitive Editor window. This includes:
+  * Opening the save file location.
+  * Clearing all saved data.
+  * Changing serializer settings via a `ScriptableObject` config.
+  * Automatically creating and updating the config asset at `Assets/Resources/HMPersistentData/PersistentDataConfig.asset`.
+* Static Utility Access: Use PersistentDataServiceUtilities to perform all operations statically. You can initialize the system in two ways:
+  * Automatically, using the `PersistentDataConfig` asset from `Resources/HMPersistentData`.
+  * Manually, by providing the serializer type, file extension, and (if needed) encryption Key & IV directly via parameters.
 
 ## Getting Started
 Install via UPM with git URL
@@ -38,9 +44,12 @@ This project is developed using Unity version 6000.0.42f1.
     ```csharp
     PersistentDataUtilities.DeleteAll();
     ```
-* Changing Serializer Type (Editor Only): Use the Editor window: Window > HMPersistentData > Settings
-  * Select between JsonSerializer and EncryptedJsonSerializer.
-  * For EncryptedJsonSerializer, input your custom Key and IV.
+* Changing Serializer Type (Editor Only):
+  * Open the Editor window: HMPersistentData > PersistentDataEditor
+  * Select between `JsonSerializer` and `EncryptedJsonSerializer`.
+  * For `EncryptedJsonSerializer`, input your custom AES Key and IV in Base64.
+  * All settings are saved into a ScriptableObject located at: `Assets/Resources/HMPersistentData/PersistentDataConfig.asset`.
+  * This file is auto-created if missing.
 
 * Error Handling:
   * If deserialization fails due to incompatible types or corrupted data, an exception is thrown.
@@ -48,7 +57,7 @@ This project is developed using Unity version 6000.0.42f1.
   * Encrypted serializer requires both Key and IV to be valid 16-character Base64 strings.
 
 ## Dependencies
-* Newtonsoft Json
+* Newtonsoft JSON
 
 ## Acknowledgments
 Special thanks to the Unity community for their invaluable resources and tools.

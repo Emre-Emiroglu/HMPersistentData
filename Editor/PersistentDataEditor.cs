@@ -1,4 +1,5 @@
-﻿using CodeCatGames.HMPersistentData.Runtime;
+﻿using System.IO;
+using CodeCatGames.HMPersistentData.Runtime;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,20 +14,16 @@ namespace CodeCatGames.HMPersistentData.Editor
         private const float MaxWidth = 512;
         private const float MinHeight = 128;
         private const float MaxHeight = 256;
-        private const string SerializerTypeSelectionLabel = "Serializer Type";
-        private const string KeyLabel = "AES Key (Base64)";
-        private const string IvLabel = "AES IV (Base64)";
-        private const string FileExtensionSelectionLabel = "File Extension";
+        private const string ConfigAssetNotFoundMessage = "Config asset not found or could not be loaded.";
         private const string InitializeButtonText = "Initialize Persistent Data Service";
         private const string OpenPersistentDataButtonText = "Open Persistent Data Path";
         private const string DeleteAllSavedDataButtonText = "Delete All Saved Data";
+        private const string ConfigFolderPath = "Assets/Resources/HMPersistentData";
+        private const string ConfigAssetPath = ConfigFolderPath + "/PersistentDataConfig.asset";
         #endregion
 
         #region Fields
-        private SerializerType _serializerType = SerializerType.Json;
-        private string _fileExtension = "dat";
-        private string _key;
-        private string _iv;
+        private PersistentDataConfig _config;
         #endregion
 
         #region Core
@@ -34,57 +31,75 @@ namespace CodeCatGames.HMPersistentData.Editor
         public static void ShowWindow()
         {
             PersistentDataEditor editor = GetWindow<PersistentDataEditor>(Name);
-            
             editor.minSize = new Vector2(MinWidth, MinHeight);
             editor.maxSize = new Vector2(MaxWidth, MaxHeight);
+
+            editor.LoadOrCreateConfig();
         }
+        private void OnEnable() => LoadOrCreateConfig();
         private void OnGUI()
         {
-            SerializerTypeSelection();
+            if (_config == null)
+            {
+                EditorGUILayout.HelpBox(ConfigAssetNotFoundMessage, MessageType.Error);
+                
+                return;
+            }
+
+            DrawConfigEditor();
+
+            GUILayout.Space(10);
             
-            FileExtensionSelection();
+            if (GUILayout.Button(InitializeButtonText))
+                PersistentDataServiceUtilities.Initialize();
 
-            InitializeButton();
+            if (GUILayout.Button(OpenPersistentDataButtonText))
+                EditorUtility.RevealInFinder(Application.persistentDataPath);
 
-            OpenPersistentDataButton();
+            if (GUILayout.Button(DeleteAllSavedDataButtonText))
+                PersistentDataServiceUtilities.DeleteAll();
 
-            DeleteAllSavedDataButton();
+            if (!GUI.changed)
+                return;
+            
+            EditorUtility.SetDirty(_config);
+            
+            AssetDatabase.SaveAssets();
         }
         #endregion
 
-        #region Executes
-        private void SerializerTypeSelection()
+        #region Utilities
+        private void LoadOrCreateConfig()
         {
-            _serializerType = (SerializerType)EditorGUILayout.EnumPopup(SerializerTypeSelectionLabel, _serializerType);
+            _config = AssetDatabase.LoadAssetAtPath<PersistentDataConfig>(ConfigAssetPath);
 
-            if (_serializerType != SerializerType.EncryptedJson)
+            if (_config != null)
                 return;
             
-            _key = EditorGUILayout.TextField(KeyLabel, _key);
-            _iv = EditorGUILayout.TextField(IvLabel, _iv);
+            if (!Directory.Exists(ConfigFolderPath))
+                Directory.CreateDirectory(ConfigFolderPath);
+
+            _config = CreateInstance<PersistentDataConfig>();
+            
+            AssetDatabase.CreateAsset(_config, ConfigAssetPath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
-        private void FileExtensionSelection() =>
-            _fileExtension = EditorGUILayout.TextField(FileExtensionSelectionLabel, _fileExtension);
-        private void InitializeButton()
+        private void DrawConfigEditor()
         {
-            if (!GUILayout.Button(InitializeButtonText))
-                return;
-            
-            PersistentDataServiceUtilities.Initialize(_serializerType, _fileExtension, _key, _iv);
-        }
-        private static void OpenPersistentDataButton()
-        {
-            if (!GUILayout.Button(OpenPersistentDataButtonText))
-                return;
-            
-            EditorUtility.RevealInFinder(Application.persistentDataPath);
-        }
-        private static void DeleteAllSavedDataButton()
-        {
-            if (!GUILayout.Button(DeleteAllSavedDataButtonText))
-                return;
-            
-            PersistentDataServiceUtilities.DeleteAll();
+            SerializedObject so = new SerializedObject(_config);
+            so.Update();
+
+            EditorGUILayout.PropertyField(so.FindProperty("serializerType"));
+            EditorGUILayout.PropertyField(so.FindProperty("fileExtension"));
+
+            if (_config.SerializerType == SerializerType.EncryptedJson)
+            {
+                EditorGUILayout.PropertyField(so.FindProperty("key"));
+                EditorGUILayout.PropertyField(so.FindProperty("iv"));
+            }
+
+            so.ApplyModifiedProperties();
         }
         #endregion
     }
