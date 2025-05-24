@@ -4,7 +4,7 @@
   "displayName": "HMPersistentData",
   "description": "HMPersistentData is a modular data persistence package for Unity that offers both plain and encrypted JSON serialization. Easily save, load, and manage persistent game data through a simple API and built-in editor support.",
   "author": {
-    "name": "Emre Emiroglu",
+    "name": "Code Cat Games",
     "email": "emirogluemre08@gmail.com",
     "url": "https://github.com/Emre-Emiroglu"
   },
