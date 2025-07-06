@@ -8,7 +8,7 @@ namespace HMPersistentData.Editor
     public sealed class PersistentDataEditor : EditorWindow
     {
         #region Constants
-        private const string MenuItem = "HMPersistentData/PersistentDataEditor";
+        private const string MenuItem = "Tools/HMPersistentData/PersistentDataEditor";
         private const string Name = "Persistent Data Editor";
         private const float MinWidth = 256;
         private const float MaxWidth = 512;
