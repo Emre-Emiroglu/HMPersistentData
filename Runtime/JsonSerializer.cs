@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CodeCatGames.HMPersistentData.Runtime
+namespace HMPersistentData.Runtime
 {
     /// <summary>
     /// Provides JSON-based serialization and deserialization using Newtonsoft.Json.

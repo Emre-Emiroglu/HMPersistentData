@@ -1,4 +1,4 @@
-﻿namespace CodeCatGames.HMPersistentData.Runtime
+﻿namespace HMPersistentData.Runtime
 {
     public enum SerializerType : int
     {

@@ -1,4 +1,4 @@
-﻿namespace CodeCatGames.HMPersistentData.Runtime
+﻿namespace HMPersistentData.Runtime
 {
     /// <summary>
     /// Defines the contract for saving, loading, and deleting persistent data.

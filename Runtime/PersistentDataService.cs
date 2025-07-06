@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-namespace CodeCatGames.HMPersistentData.Runtime
+namespace HMPersistentData.Runtime
 {
     /// <summary>
     /// Provides functionality for saving, loading, and deleting persistent data using a specified serializer.

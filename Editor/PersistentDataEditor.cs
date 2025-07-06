@@ -1,9 +1,9 @@
 ﻿using System.IO;
-using CodeCatGames.HMPersistentData.Runtime;
+using HMPersistentData.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeCatGames.HMPersistentData.Editor
+namespace HMPersistentData.Editor
 {
     public sealed class PersistentDataEditor : EditorWindow
     {

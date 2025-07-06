@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-namespace CodeCatGames.HMPersistentData.Runtime
+namespace HMPersistentData.Runtime
 {
     /// <summary>
     /// Provides static utility methods for initializing and interacting with the persistent data service.

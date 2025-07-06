@@ -1,8 +1,8 @@
 ﻿using System.IO;
-using CodeCatGames.HMPersistentData.Runtime;
+using HMPersistentData.Runtime;
 using NUnit.Framework;
 
-namespace CodeCatGames.HMPersistentData.Tests.EditMode
+namespace HMPersistentData.Tests.EditMode
 {
     public sealed class PersistentDataServiceEditModeTests
     {

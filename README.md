@@ -1,12 +1,14 @@
+<img src="icon.jpg" width="512" height="512" alt="HMPersistentData Logo">
+
 # HMPersistentData
 HMPersistentData is a flexible and extendable data persistence system designed for Unity applications. It provides a simple API for saving, loading, and deleting data using various serialization strategies, including encrypted and unencrypted JSON.
 
 ## Features
 HMPersistentData offers a modular and secure data persistence solution:
-* Save / Load / Delete / DeleteAll: Save and retrieve any serializable object type, or delete them individually or all at once.
+* Save / Load / Delete / DeleteAll: Save and retrieve any serializable object type or delete them individually or all at once.
 * Serializer Selection: Choose between default JSON and AES-encrypted JSON serializers.
 * Custom Key & IV Support: For encrypted serialization, specify your own key and IV values to secure data.
-* Editor Utility Tools: Easily manage saved data through an intuitive Editor window. This includes:
+* Editor Utility Tools: Manage saved data through an intuitive Editor window. This includes:
   * Opening the save file location.
   * Clearing all saved data.
   * Changing serializer settings via a `ScriptableObject` config.
@@ -45,7 +47,7 @@ This project is developed using Unity version 6000.0.42f1.
     PersistentDataUtilities.DeleteAll();
     ```
 * Changing Serializer Type (Editor Only):
-  * Open the Editor window: HMPersistentData > PersistentDataEditor
+  * Open the Editor window: `Tools > HMPersistentData > PersistentDataEditor`.
   * Select between `JsonSerializer` and `EncryptedJsonSerializer`.
   * For `EncryptedJsonSerializer`, input your custom AES Key and IV in Base64.
   * All settings are saved into a ScriptableObject located at: `Assets/Resources/HMPersistentData/PersistentDataConfig.asset`.

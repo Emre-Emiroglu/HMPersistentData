@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CodeCatGames.HMPersistentData.Runtime
+namespace HMPersistentData.Runtime
 {
     [CreateAssetMenu(fileName = "PersistentDataConfig", menuName = "HMPersistentData/PersistentDataConfig", order = 0)]
     public sealed class PersistentDataConfig : ScriptableObject

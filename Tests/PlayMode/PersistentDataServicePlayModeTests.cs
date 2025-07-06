@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.IO;
-using CodeCatGames.HMPersistentData.Runtime;
+using HMPersistentData.Runtime;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
-namespace CodeCatGames.HMPersistentData.Tests.PlayMode
+namespace HMPersistentData.Tests.PlayMode
 {
     public sealed class PersistentDataServicePlayModeTests
     {
